@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { getUsuarios } from '../../services/usuarioServices';
+import { getUsuarios, getUsuario, updateUsuario, deleteUsuario } from '../../services/usuarioServices';
 
 function Usuarios() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [idBusca, setIdBusca] = useState('');
 
     useEffect(() => {
         const fetchUsuarios = async () => {
@@ -26,9 +27,91 @@ function Usuarios() {
         fetchUsuarios();
     }, []);
 
+        const handleDelete = async (id) => {
+        const confirmar = window.confirm('Tem certeza que deseja excluir este usuário?');
+        if (!confirmar) {
+            return;
+        }
+        try {
+            await deleteUsuario(id);
+
+            setUsers((usuarios) =>
+            usuarios.filter((usuario) => usuario.id !== id)
+            );
+
+            alert('Usuário excluído com sucesso!');
+        }catch (error) {
+        alert('Erro ao excluir usuário');
+        }
+        };
+
+        const handleEdit = async (user) => {
+        const novoNome = window.prompt( 'Digite o novo nome:', user.nome );
+
+        if (!novoNome) {
+            return;
+        }
+
+        try {
+            const usuarioAtualizado = await updateUsuario(
+                user.id, {
+                nome: novoNome,
+                email: user.email,
+                senha: user.senha,
+                foto: user.foto
+                }
+            );
+
+                setUsers((usuarios) =>
+                    usuarios.map((usuario) =>
+                    usuario.id === user.id
+                    ? usuarioAtualizado
+                    : usuario
+            )
+        );
+
+            alert('Usuário atualizado com sucesso!');
+            }catch (error) {
+                alert('Erro ao atualizar usuário');
+        }
+        };
+        const handleBuscarPorId = async () => {
+            if (!idBusca) {
+                return;
+            }
+            try {
+                const usuario = await getUsuario(idBusca);
+                setUsers([usuario]);
+            }catch (error) {
+                setError( error.response?.data?.error || 'Usuário não encontrado' );
+            }
+        };
+
     return (
         <div className="page-container">
             <h1>Lista de Usuários</h1>
+
+            <div style={styles.searchContainer}>
+                <input
+                    type="number"
+                    placeholder="Digite o ID do usuário"
+                    value={idBusca}
+                    onChange={(e) => setIdBusca(e.target.value)}
+                />
+
+                <button onClick={handleBuscarPorId}>
+                    Buscar
+                </button>
+
+                <button
+                    onClick={() => {
+                        setIdBusca('');
+                        window.location.reload();
+                    }}
+                >
+                    Mostrar todos
+                </button>
+            </div>
 
             {loading && (
                 <div style={styles.message}>
@@ -62,8 +145,18 @@ function Usuarios() {
                                 </span>
                             </div>
 
-                            <div style={styles.statusBadge}>
-                                ID #{user.id}
+                            <div style={styles.actions}>
+                                <span style={styles.statusBadge}>
+                                    ID #{user.id}
+                                </span>
+
+                                <button style={styles.editButton} onClick={() => handleEdit(user)} >
+                                    Editar
+                                </button>
+
+                                <button style={styles.deleteButton} onClick={() => handleDelete(user.id)} >
+                                    Excluir
+                                </button>
                             </div>
                         </li>
                     ))}
@@ -74,6 +167,37 @@ function Usuarios() {
 }
 
 const styles = {
+    searchContainer: {
+        display: 'flex',
+        gap: '10px',
+        marginBottom: '20px',
+        alignItems: 'center',
+    },
+
+    actions: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px',
+    },
+
+    editButton: {
+        background: 'var(--primary-color)',
+        color: '#fff',
+        border: 'none',
+        padding: '6px 12px',
+        borderRadius: '6px',
+        cursor: 'pointer',
+    },
+
+    deleteButton: {
+        background: '#dc3545',
+        color: '#fff',
+        border: 'none',
+        padding: '6px 12px',
+        borderRadius: '6px',
+        cursor: 'pointer',
+    },
+
     usersList: {
         listStyleType: 'none',
         padding: 0,
