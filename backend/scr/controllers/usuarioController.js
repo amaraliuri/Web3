@@ -1,5 +1,6 @@
 // Importação correta do Service no topo do arquivo
 const usuarioService = require('../services/usuarioService');
+const bcrypt = require('bcrypt');
 
 const buscarUsuario = async (req, res) => {
     try {
@@ -25,13 +26,14 @@ const criarUsuario = async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
 
-        // Validação simples
+        
         if (!nome || !email || !senha) {
             return res.status(400).json({ err: 'Dados inválidos' });
         }
 
-        // Chama a função exata que você configurou no service
-        const novoUsuario = await usuarioService.criarUsuario({ nome, email, senha });
+        const hash = await bcrypt.hash(senha, 10);
+
+        const novoUsuario = await usuarioService.criarUsuario({ nome, email, hash });
         res.status(201).json(novoUsuario);
     } catch (error) {
         console.error("ERRO AO CRIAR USUARIO:", error);
