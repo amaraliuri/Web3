@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { getUsuarios, getUsuario, updateUsuario, deleteUsuario } from '../../services/usuarioServices';
+import { getUsuarios, getUsuario, updateUsuario, deleteUsuario, createUsuario } from '../../services/usuarioServices';
 
 function Usuarios() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [idBusca, setIdBusca] = useState('');
+    const [form, setForm] = useState({ nome: '', email: '', senha: '' });
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchUsuarios = async () => {
@@ -87,9 +89,49 @@ function Usuarios() {
             }
         };
 
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setForm((prev) => ({ ...prev, [name]: value }));
+        };
+
+        const handleSalvar = async (e) => {
+            e.preventDefault();
+            try {
+                await createUsuario(form);
+                setForm({ nome: '', email: '', senha: '' });
+                setIsModalOpen(false);
+                alert('Usuário criado com sucesso!');
+                window.location.reload();
+            } catch (error) {
+                alert('Erro ao criar usuário');
+            }
+        };
+
     return (
         <div className="page-container">
             <h1>Lista de Usuários</h1>
+
+            <button
+                style={{ ...styles.editButton, marginBottom: '20px', background: '#28a745' }}
+                onClick={() => setIsModalOpen(true)}
+            >
+                + Cadastrar Novo Usuário
+            </button>
+
+            {isModalOpen && (
+                <div style={{ padding: '20px', background: 'var(--card-bg)', border: '1px solid var(--border-color)', marginBottom: '20px', borderRadius: '12px' }}>
+                    <h2>Cadastrar Usuário</h2>
+                    <form onSubmit={handleSalvar} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <input type="text" name="nome" placeholder="Nome" value={form.nome} onChange={handleChange} required />
+                        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
+                        <input type="password" name="senha" placeholder="Senha" value={form.senha} onChange={handleChange} required />
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <button type="submit" style={styles.editButton}>Salvar</button>
+                            <button type="button" style={styles.deleteButton} onClick={() => setIsModalOpen(false)}>Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            )}
 
             <div style={styles.searchContainer}>
                 <input

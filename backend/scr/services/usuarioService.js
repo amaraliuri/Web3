@@ -26,9 +26,14 @@ const excluirUsuario = async (id) => {
     return usuario;
 };
 
+const criarUsuario = async (dados) => {
+    return await Usuario.create(dados);
+};
+
 module.exports = {
     obterTodosUsuario,
     obterUsuarioPorId,
     atualizarUsuario,
-    excluirUsuario
+    excluirUsuario,
+    criarUsuario
     };

@@ -58,10 +58,27 @@ const excluirUsuario = async (req, res) => {
     }
 };
 
+const criarUsuario = async (req, res) => {
+  try {
+    const { nome, email, senha } = req.body;
+
+    if (!nome || !email || !senha) return res.status(400).json({ err: 'Dados inválidos' });
+
+    const usuario = await usuariosService.criarUsuario(nome, email, senha);
+    res.status(201).json(usuario);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ err: 'Erro interno ao criar usuario' });
+  }
+};
+
+
+
 module.exports = {
     buscarUsuario,
     buscarUsuarioPorId,
     editarUsuario,
-    excluirUsuario
+    excluirUsuario,
+    criarUsuario
 };
     

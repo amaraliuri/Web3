@@ -10,4 +10,6 @@ router.put('/:id', usuarioController.editarUsuario);
 
 router.delete('/:id', usuarioController.excluirUsuario);
 
+router.post('/', usuarioController.criarUsuario);
+
 module.exports = router;
