@@ -1,15 +1,18 @@
 const express = require('express');
 const usuarioController = require('../controllers/usuarioController');
 const router = express.Router();
+const {autenticar, autorizar} = require('../middlewares/authMiddleware');
 
-router.get('/', usuarioController.buscarUsuario);
+// rotas publicas
+router.post('/',  usuarioController.criarUsuario);
 
-router.get('/:id', usuarioController.buscarUsuarioPorId);
+// rotas para usuario
+router.get('/', autenticar, usuarioController.buscarUsuario);
+router.get('/:id', autenticar, usuarioController.buscarUsuarioPorId);
+router.put('/:id', autenticar, usuarioController.editarUsuario);
 
-router.put('/:id', usuarioController.editarUsuario);
+// rotas adm
+router.delete('/:id', autenticar, autorizar('adm'), usuarioController.excluirUsuario);
 
-router.delete('/:id', usuarioController.excluirUsuario);
-
-router.post('/', usuarioController.criarUsuario);
 
 module.exports = router;

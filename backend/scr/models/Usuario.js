@@ -26,6 +26,11 @@ Usuario.init({
         type: DataTypes.TEXT('long'),
         allowNull: true,
     },
+    perfil: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'usuario',
+    },
 }, {
     sequelize,
     modelName: 'Usuario',
@@ -34,6 +39,11 @@ Usuario.init({
     defaultScope: {
         attributes: { exclude: ['senha'] },
     },
+    scopes:{
+        comSenha:{
+            attributes: { include: ['senha'] }
+        }
+    }
 });
 
 module.exports = Usuario;

@@ -1,5 +1,7 @@
 'use strict';
 
+const { sequelize } = require('../instances/mysql');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -25,6 +27,11 @@ module.exports = {
       foto: {
         type: Sequelize.TEXT('long'),
         allowNull: true,
+      },
+      perfil: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 'usuario',
       },
       createdAt: {
         type: Sequelize.DATE,

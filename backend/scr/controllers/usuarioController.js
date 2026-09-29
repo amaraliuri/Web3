@@ -33,7 +33,7 @@ const criarUsuario = async (req, res) => {
 
         const hash = await bcrypt.hash(senha, 10);
 
-        const novoUsuario = await usuarioService.criarUsuario({ nome, email, hash });
+        const novoUsuario = await usuarioService.criarUsuario({ nome, email, senha: hash });
         res.status(201).json(novoUsuario);
     } catch (error) {
         console.error("ERRO AO CRIAR USUARIO:", error);
