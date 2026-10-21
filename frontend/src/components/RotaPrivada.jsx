@@ -5,11 +5,11 @@ function RotaPrivada({ children, perfilNecessario  }) {
     const { usuario } = useAuth();
 
     if (!usuario) {
-        return <navigate to="/login" replace/>;
+        return <Navigate to="/login" replace/>;
     }
 
     if (perfilNecessario && usuario.perfil !== perfilNecessario) {
-        return <navigate to="/sem-permissao" replace/>;
+        return <Navigate to="/sem-permissao" replace/>;
     }
 
     return children;
