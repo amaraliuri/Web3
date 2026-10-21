@@ -12,8 +12,20 @@ function Header() {
 
     if (!usuario) return null;
 
+    
+
     return (
         <header style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+
+            {usuario.foto && (
+                <img 
+                    src={usuario.foto} 
+                    alt={usuario.nome} 
+                    referrerPolicy="no-referrer"
+                    style={{ width: '32px', height: '32px', borderRadius: '50%' }} 
+                />
+            )}
+
             <span style={{ fontWeight: '500' }}>Olá, {usuario.nome}</span>
             {usuario.perfil === 'admin' && (
                 <button onClick={() => navigate('/admin')} style={{ padding: '6px 12px', cursor: 'pointer' }}>
