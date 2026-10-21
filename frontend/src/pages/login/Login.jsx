@@ -49,7 +49,7 @@ function Login() {
             <div style={{ textAlign: 'center' }}>
                 <p style={{ marginBottom: '10px' }}>ou</p>
                 <GoogleLogin
-                    onSuccess={handleGoogle} // Chama a função de sucesso[cite: 84]
+                    onSuccess={handleGoogle}
                     onError={() => console.log('Login com Google falhou')}
                 />
             </div>
@@ -58,3 +58,5 @@ function Login() {
         
     );
 }
+
+export default Login;
