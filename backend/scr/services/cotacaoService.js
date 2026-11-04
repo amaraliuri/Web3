@@ -36,7 +36,15 @@ const listarCotacoesSalvas = async () => {
     });
 };
 
+const excluirCotacao = async (id) => {
+    const cotacao = await Cotacao.findByPk(id);
+    if (!cotacao) return null;
+    await cotacao.destroy();
+    return true;
+};
+
 module.exports = {
     buscarESalvarCotacao,
-    listarCotacoesSalvas
+    listarCotacoesSalvas,
+    excluirCotacao
 };

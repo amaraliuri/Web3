@@ -9,3 +9,8 @@ export const buscarESalvarNovaCotacao = async (moeda) => {
     const response = await api.post(`/cotacoes/${moeda}`);
     return response.data;
 };
+
+export const deleteCotacao = async (id) => {
+    const response = await api.delete(`/cotacoes/${id}`);
+    return response.data;
+};

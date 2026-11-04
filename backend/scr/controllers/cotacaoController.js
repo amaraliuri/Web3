@@ -24,7 +24,18 @@ const listarCotacoes = async (req, res) => {
     }
 };
 
+const excluirCotacao = async (req, res) => {
+    try {
+        const deletado = await cotacaoService.excluirCotacao(req.params.id);
+        if (!deletado) return res.status(404).json({ error: 'Cotação não encontrada' });
+        res.status(200).json({ mensagem: 'Cotação excluída com sucesso' });
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao excluir cotação' });
+    }
+};
+
 module.exports = {
     buscarNovaCotacao,
-    listarCotacoes
+    listarCotacoes,
+    excluirCotacao
 };

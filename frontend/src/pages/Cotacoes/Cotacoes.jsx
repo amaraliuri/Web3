@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCotacoes, buscarESalvarNovaCotacao } from '../../services/cotacaoServices';
+import { getCotacoes, buscarESalvarNovaCotacao, deleteCotacao } from '../../services/cotacaoService';
 
 function Cotacoes() {
     const [cotacoes, setCotacoes] = useState([]);
@@ -31,6 +31,16 @@ function Cotacoes() {
             alert(`Erro ao buscar cotação de ${moeda}`);
         } finally {
             setBuscando(false);
+        }
+    };
+
+    const handleExcluir = async (id) => {
+        if (!window.confirm('Tem certeza que deseja excluir esta cotação?')) return;
+        try {
+            await deleteCotacao(id);
+            setCotacoes(cotacoes.filter(c => c.id !== id));
+        } catch (error) {
+            alert('Erro ao excluir cotação');
         }
     };
 
@@ -86,6 +96,11 @@ function Cotacoes() {
                                         <p style={{ margin: '0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Venda</p>
                                         <strong style={{ color: '#ef4444' }}>R$ {Number(c.valorVenda).toFixed(2)}</strong>
                                     </div>
+                                    <button onClick={() => handleExcluir(c.id)} 
+                                        style={{ background: '#dc3545', color: '#fff', border: 'none', padding: '6px 12px', borderRadius: '6px', cursor: 'pointer' }}
+                                    >
+                                        Excluir
+                                    </button>
                                 </div>
                             </div>
                         ))
