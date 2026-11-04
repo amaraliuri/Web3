@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Users, Settings, LogOut, Sun, Moon, Activity } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, Sun, Moon, Activity, CircleDollarSign } from 'lucide-react';
 import Home from './pages/Home/Home';
 import Usuarios from './pages/Usuarios/Usuarios';
 import Login from './pages/login/Login';
 import RotaPrivada from './components/RotaPrivada';
 import Header from './components/Header';
 import { useAuth } from './contexts/AuthContext';
+import Cotacoes from './pages/Cotacoes/Cotacoes';
 
 function Layout() {
   const [theme, setTheme] = useState('light');
@@ -43,6 +44,10 @@ function Layout() {
         <Link to="/usuarios" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Users size={20} />
           Usuários
+        </Link>
+        <Link to="/cotacoes" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <CircleDollarSign size={20} />
+          Cotações
         </Link>
         <Link to="/configuracoes" className="sidebar-link" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Settings size={20} />
@@ -90,6 +95,7 @@ function App() {
       }>
         <Route path="/" element={<Home />} />
         <Route path="/usuarios" element={<Usuarios />} />
+        <Route path="/cotacoes" element={<Cotacoes />} />
       </Route>
 
       {/* Rota coringa que redireciona URLs não encontradas[cite: 78] */}
